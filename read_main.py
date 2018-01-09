@@ -19,4 +19,6 @@ input_file = 'gridExport_20180109T1540Z.xlsx'
 full_input_file = input_folder + input_file
 logger.info('full input file name: %s' % full_input_file)
 df = pd.read_excel(full_input_file, sheetname=0, skiprows=[0, 1, 2, 3, 4])
-logger.info(df.head())
+# https://stackoverflow.com/questions/28538536/deleting-multiple-columns-based-on-column-names-in-pandas
+df = df[df.columns[~df.columns.str.contains('Unnamed:')]]
+logger.info(df.head(26))
