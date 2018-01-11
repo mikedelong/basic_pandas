@@ -23,6 +23,16 @@ logger.info('full input file name: %s' % full_input_file)
 df = pd.read_excel(full_input_file, sheetname=0, skiprows=[0, 1, 2, 3, 4])
 # https://stackoverflow.com/questions/28538536/deleting-multiple-columns-based-on-column-names-in-pandas
 df = df[df.columns[~df.columns.str.contains('Unnamed:')]]
+logger.info('head after dropping unnamed columns:')
+logger.info(df.head(26))
+
+# convert the Date column, if it exists, to a date
+# https://stackoverflow.com/questions/39604094/pandas-delete-all-rows-that-are-not-a-datetime-type
+if 'Date' in df.columns:
+    df['Date'] = pd.to_datetime(df['Date'], errors='coerce')
+    df = df.dropna(subset=['Date'])
+
+logger.info('head after converting dates:')
 logger.info(df.head(26))
 
 # read the sorting instructions
