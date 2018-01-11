@@ -18,6 +18,7 @@ input_folder = './input/'
 # todo: have this run in a loop and process all the files
 input_file = 'gridExport_20180109T1540Z.xlsx'
 input_file = 'gridExport_20180111T1618Z.xlsx'
+input_file = 'gridExport_20180111T1916Z.xlsx'
 
 full_input_file = input_folder + input_file
 logger.info('full input file name: %s' % full_input_file)
@@ -62,10 +63,10 @@ logger.info('writing result to %s' % full_output_file)
 df.to_csv(full_output_file)
 
 # before we go let's scale by the total for each month and write that to a separate file
+# todo: add a list of columns to exclude from the sum
 df['Sum'] = df.sum(axis=1)
 for column in df.columns:
     df[column] = df[column] / df['Sum']
-# todo drop the sum column
 df = df.drop(['Sum'], axis=1)
 
 output_file = input_file.replace('.xlsx', '-scaled.csv')
