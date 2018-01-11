@@ -25,7 +25,7 @@ logger.info(df.head(26))
 
 # write the result to CSV
 output_folder = './output/'
-output_file = input_file.replace('.xlsx', '-output.csv')
+output_file = input_file.replace('.xlsx', '.csv')
 logger.info('short output file name: %s' % output_file)
 full_output_file = output_folder + output_file
 logger.info('writing result to %s' % full_output_file)
