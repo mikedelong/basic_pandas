@@ -13,6 +13,7 @@ logger.addHandler(console_handler)
 console_handler.setLevel(logging_level)
 logger.debug('started')
 
+# todo what if this folder does not exist?
 input_folder = './input/'
 input_file = 'gridExport_20180109T1540Z.xlsx'
 
@@ -24,6 +25,7 @@ df = df[df.columns[~df.columns.str.contains('Unnamed:')]]
 logger.info(df.head(26))
 
 # write the result to CSV
+# todo what if this folder does not exist?
 output_folder = './output/'
 output_file = input_file.replace('.xlsx', '.csv')
 logger.info('short output file name: %s' % output_file)
