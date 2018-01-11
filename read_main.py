@@ -1,4 +1,3 @@
-import json
 import logging
 
 import pandas as pd
@@ -32,26 +31,16 @@ if 'Date' in df.columns:
     df['Date'] = pd.to_datetime(df['Date'], errors='coerce')
     df = df.dropna(subset=['Date'])
 
-logger.info('head after converting dates:')
-logger.info(df.head(26))
+    logger.info('head after converting dates:')
+    logger.info(df.head(26))
 
-# read the sorting instructions
-# todo what if this file is missing
-# todo what if this file is empty
-sort_keys_file = './sort.json'
-keys = []
-ascending = []
-with open(sort_keys_file, 'rb') as file_fp:
-    settings = json.load(file_fp)
-    logger.info(settings)
-    for key, value in settings.items():
-        keys.append(value['name'])
-        ascending.append(value['ascending'])
-logger.info(keys)
-logger.info(ascending)
+# now do the group-by
+# https://pandas.pydata.org/pandas-docs/stable/groupby.html
+if 'Date' in df.columns:
+    df = df.groupby(['Date']).sum()
+    logger.info('head group by dates:')
+    logger.info(df.head(26))
 
-# sort the rows
-df = df.sort_values(keys, ascending=ascending)
 
 # write the result to CSV
 # todo what if this folder does not exist?
