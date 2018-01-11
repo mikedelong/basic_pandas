@@ -22,3 +22,10 @@ df = pd.read_excel(full_input_file, sheetname=0, skiprows=[0, 1, 2, 3, 4])
 # https://stackoverflow.com/questions/28538536/deleting-multiple-columns-based-on-column-names-in-pandas
 df = df[df.columns[~df.columns.str.contains('Unnamed:')]]
 logger.info(df.head(26))
+
+# write the result to CSV
+output_folder = './output/'
+output_file = input_file.replace('.xlsx', '-output.csv')
+logger.info('short output file name: %s' % output_file)
+full_output_file = output_folder + output_file
+logger.info('writing result to %s' % full_output_file)
