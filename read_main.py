@@ -1,3 +1,4 @@
+import json
 import logging
 
 import pandas as pd
@@ -23,6 +24,24 @@ df = pd.read_excel(full_input_file, sheetname=0, skiprows=[0, 1, 2, 3, 4])
 # https://stackoverflow.com/questions/28538536/deleting-multiple-columns-based-on-column-names-in-pandas
 df = df[df.columns[~df.columns.str.contains('Unnamed:')]]
 logger.info(df.head(26))
+
+# read the sorting instructions
+# todo what if this file is missing
+# todo what if this file is empty
+sort_keys_file = './sort.json'
+keys = []
+ascending = []
+with open(sort_keys_file, 'rb') as file_fp:
+    settings = json.load(file_fp)
+    logger.info(settings)
+    for key, value in settings.items():
+        keys.append(value['name'])
+        ascending.append(value['ascending'])
+logger.info(keys)
+logger.info(ascending)
+
+# sort the rows
+df = df.sort_values(keys, ascending=ascending)
 
 # write the result to CSV
 # todo what if this folder does not exist?
