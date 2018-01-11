@@ -31,3 +31,5 @@ output_file = input_file.replace('.xlsx', '.csv')
 logger.info('short output file name: %s' % output_file)
 full_output_file = output_folder + output_file
 logger.info('writing result to %s' % full_output_file)
+df.to_csv(full_output_file)
+logger.info('done.')
