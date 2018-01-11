@@ -17,6 +17,7 @@ logger.debug('started')
 input_folder = './input/'
 # todo: have this run in a loop and process all the files
 input_file = 'gridExport_20180109T1540Z.xlsx'
+input_file = 'gridExport_20180111T1618Z.xlsx'
 
 full_input_file = input_folder + input_file
 logger.info('full input file name: %s' % full_input_file)
@@ -26,6 +27,7 @@ df = pd.read_excel(full_input_file, sheetname=0, skiprows=[0, 1, 2, 3, 4])
 df = df[df.columns[~df.columns.str.contains('Unnamed:')]]
 logger.info('head after dropping unnamed columns:')
 logger.info(df.head(26))
+
 
 # convert the Date column, if it exists, to a date
 # https://stackoverflow.com/questions/24870306/how-to-check-if-a-column-exists-in-pandas
@@ -44,6 +46,11 @@ if 'Date' in df.columns:
     logger.info('head group by dates:')
     logger.info(df.head(26))
 
+# rename the remaining columns to their short names
+# https://stackoverflow.com/questions/33543337/replace-string-in-pandas-df-column-name
+df = df.rename(columns={column: column.split(' ')[0] for column in df.columns})
+logger.info(df.columns)
+
 
 # write the result to CSV
 # todo: what if this folder does not exist?
@@ -53,4 +60,18 @@ logger.info('short output file name: %s' % output_file)
 full_output_file = output_folder + output_file
 logger.info('writing result to %s' % full_output_file)
 df.to_csv(full_output_file)
+
+# before we go let's scale by the total for each month and write that to a separate file
+df['Sum'] = df.sum(axis=1)
+for column in df.columns:
+    df[column] = df[column] / df['Sum']
+# todo drop the sum column
+df = df.drop(['Sum'], axis=1)
+
+output_file = input_file.replace('.xlsx', '-scaled.csv')
+logger.info('short output file name: %s' % output_file)
+full_output_file = output_folder + output_file
+logger.info('writing result to %s' % full_output_file)
+df.to_csv(full_output_file)
+
 logger.info('done.')
