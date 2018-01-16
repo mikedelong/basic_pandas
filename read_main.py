@@ -60,17 +60,22 @@ for input_file in input_file_list:
     logger.info('writing result to %s' % full_output_file)
     df.to_csv(full_output_file)
 
-    # before we go let's scale by the total for each month and write that to a separate file
-    # todo: add a list of columns to exclude from the sum
-    df['Sum'] = df.sum(axis=1)
-    for column in df.columns:
-        df[column] = df[column] / df['Sum']
-    df = df.drop(['Sum'], axis=1)
+    do_scale = False
+    if do_scale:
+        # before we go let's scale by the total for each month and write that to a separate file
+        # todo: add a list of columns to exclude from the sum
+        df['Sum'] = df.sum(axis=1)
+        try:
+            for column in df.columns:
+                df[column] = df[column] / df['Sum']
+        except TypeError as typeError:
+            pass
+        df = df.drop(['Sum'], axis=1)
 
-    output_file = input_file.replace('.xlsx', '-scaled.csv')
-    logger.info('short output file name: %s' % output_file)
-    full_output_file = output_folder + output_file
-    logger.info('writing result to %s' % full_output_file)
-    df.to_csv(full_output_file)
+        output_file = input_file.replace('.xlsx', '-scaled.csv')
+        logger.info('short output file name: %s' % output_file)
+        full_output_file = output_folder + output_file
+        logger.info('writing result to %s' % full_output_file)
+        df.to_csv(full_output_file)
 
 logger.info('done.')
